@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRESMARA — AI-Assisted Decision-Making Study</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
+<!-- EmailJS SDK — sends participant data directly to caesarvasilescu@gmail.com -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+/* ── Design system ─────────────────────────────────────────────────────── */
+:root {
+  --navy:      #1C2B4A;
+  --navy-mid:  #2E4470;
+  --navy-lt:   #3D5A99;
+  --gold:      #C8952A;
+  --gold-lt:   #E8B94A;
+  --cream:     #F8F5EE;
+  --cream-dark:#EDE8DC;
+  --text:      #1A1A2E;
+  --text-mid:  #3D3D5C;
+  --text-lt:   #6B7094;
+  --border:    #C8C0B0;
+  --border-lt: #E0D8CC;
+  --scaff:     #D6E8F7;
+  --scaff-dk:  #1A4A7A;
+  --ctrl:      #FDE9D9;
+  --ctrl-dk:   #7A2A00;
+  --success:   #2D6A4F;
+  --warn:      #9B6A00;
+  --radius:    6px;
+  --shadow:    0 2px 12px rgba(28,43,74,.10);
+  --shadow-lg: 0 8px 40px rgba(28,43,74,.16);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+/* ── Header bar ─────────────────────────────────────────────────────────── */
+.site-header {
+  background: var(--navy);
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,.25);
+}
+.site-header .logo {
+  font-family: 'Libre Baskerville', serif;
+  color: #fff;
+  font-size: 1.05rem;
+  letter-spacing: .03em;
+}
+.site-header .logo span { color: var(--gold-lt); }
+.progress-bar-wrap {
+  flex: 1; max-width: 320px; margin: 0 32px;
+  background: rgba(255,255,255,.15);
+  border-radius: 99px;
+  height: 6px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+  border-radius: 99px;
+  transition: width .5s ease;
+  width: 0%;
+}
+.progress-label {
+  color: rgba(255,255,255,.7);
+  font-size: .78rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ── Main container ─────────────────────────────────────────────────────── */
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ── Screens ────────────────────────────────────────────────────────────── */
+.screen { display: none; animation: fadeIn .35s ease; }
+.screen.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+/* ── Cards ──────────────────────────────────────────────────────────────── */
+.card {
+  background: #fff;
+  border: 1px solid var(--border-lt);
+  border-radius: 10px;
+  padding: 36px 40px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+.card-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.35rem;
+  color: var(--navy);
+  margin-bottom: 6px;
+  line-height: 1.35;
+}
+.card-subtitle {
+  font-size: .88rem;
+  color: var(--text-lt);
+  margin-bottom: 20px;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.card hr { border: none; border-top: 1px solid var(--border-lt); margin: 20px 0; }
+
+/* ── Section label ──────────────────────────────────────────────────────── */
+.section-label {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.7rem;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.section-meta {
+  color: var(--text-lt);
+  font-size: .9rem;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--border-lt);
+}
+
+/* ── Vignette text ──────────────────────────────────────────────────────── */
+.vignette-box {
+  background: var(--cream);
+  border-left: 4px solid var(--navy-lt);
+  border-radius: 0 6px 6px 0;
+  padding: 20px 24px;
+  margin: 16px 0 24px;
+  font-size: .95rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+}
+.vignette-box .vignette-inner-quote {
+  margin: 12px 0;
+  padding: 12px 18px;
+  background: rgba(255,255,255,.7);
+  border-left: 3px solid var(--gold);
+  font-style: italic;
+  color: var(--text);
+  border-radius: 0 4px 4px 0;
+}
+.vignette-box ul, .vignette-box ol {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+.vignette-box li { margin-bottom: 6px; }
+.vignette-box strong { color: var(--navy); }
+.task-instruction {
+  background: var(--navy);
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: var(--radius);
+  font-size: .93rem;
+  margin-bottom: 24px;
+  line-height: 1.55;
+}
+.task-instruction strong { color: var(--gold-lt); }
+
+/* ── Condition badge ────────────────────────────────────────────────────── */
+.cond-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.cond-badge.scaffolded { background: var(--scaff); color: var(--scaff-dk); }
+.cond-badge.unstructured { background: var(--ctrl); color: var(--ctrl-dk); }
+.cond-badge::before { content:''; width:8px; height:8px; border-radius:50%; background:currentColor; }
+
+/* ── Prompt template ────────────────────────────────────────────────────── */
+.prompt-template { border: 1px solid var(--border); border-radius: 8px; overflow:hidden; margin-bottom: 24px; }
+.prompt-template-header {
+  background: var(--navy);
+  color: #fff;
+  padding: 12px 20px;
+  font-family: 'Libre Baskerville', serif;
+  font-size: .95rem;
+}
+.prompt-template-header span { color: var(--gold-lt); font-size:.8rem; margin-left:8px; }
+.prompt-field {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  border-bottom: 1px solid var(--border-lt);
+}
+.prompt-field:last-child { border-bottom: none; }
+.prompt-field-label {
+  background: var(--navy-mid);
+  color: #fff;
+  padding: 14px 16px;
+  font-size: .82rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.prompt-field-label .hint {
+  font-size: .72rem;
+  color: rgba(255,255,255,.6);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.prompt-field textarea {
+  border: none;
+  outline: none;
+  resize: vertical;
+  padding: 14px 16px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: .92rem;
+  line-height: 1.6;
+  background: #fff;
+  color: var(--text);
+  min-height: 72px;
+  width: 100%;
+  transition: background .2s;
+}
+.prompt-field textarea:focus { background: #F0F6FF; }
+
+/* Free-form (control) */
+.free-prompt textarea {
+  width: 100%;
+  min-height: 130px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: .92rem;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: border-color .2s, background .2s;
+}
+.free-prompt textarea:focus { border-color: var(--navy-lt); background: #F0F6FF; }
+
+/* ── ChatGPT link area ──────────────────────────────────────────────────── */
+.chatgpt-link-area {
+  background: #F0F6F0;
+  border: 1px solid #A8D4B0;
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  font-size: .9rem;
+}
+.chatgpt-link-area label { font-weight: 600; color: var(--success); display: block; margin-bottom: 6px; }
+.chatgpt-link-area input[type=url] {
+  width: 100%; padding: 9px 12px;
+  border: 1px solid #A8D4B0;
+  border-radius: 4px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: .82rem;
+  outline: none;
+}
+.chatgpt-link-area input[type=url]:focus { border-color: var(--success); }
+.chatgpt-link-area .hint-text {
+  font-size: .78rem; color: #4A8A5A; margin-top: 6px;
+}
+
+/* ── Likert scale ───────────────────────────────────────────────────────── */
+.likert-block { margin-bottom: 20px; }
+.likert-q {
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 10px;
+}
+.likert-q .sub { font-weight: 400; color: var(--text-lt); font-size:.82rem; margin-left:6px; }
+.likert-scale {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.likert-scale label {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  padding: 10px 4px 8px;
+  border-right: 1px solid var(--border-lt);
+  transition: background .15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: .8rem;
+  color: var(--text-lt);
+  user-select: none;
+}
+.likert-scale label:last-child { border-right: none; }
+.likert-scale label:hover { background: var(--cream); }
+.likert-scale input[type=radio] { display: none; }
+.likert-scale input[type=radio]:checked + span + span,
+.likert-scale label:has(input[type=radio]:checked) {
+  background: var(--navy);
+  color: #fff;
+}
+.likert-scale label:has(input[type=radio]:checked) {
+  background: var(--navy);
+  color: #fff;
+}
+.likert-num { font-size: 1rem; font-weight: 700; }
+.likert-anchor { font-size: .7rem; color: inherit; }
+.likert-anchors {
+  display: flex;
+  justify-content: space-between;
+  font-size: .72rem;
+  color: var(--text-lt);
+  padding: 4px 2px 0;
+}
+
+/* ── Usage indicator ────────────────────────────────────────────────────── */
+.usage-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.usage-option {
+  flex: 1;
+  min-width: 140px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  cursor: pointer;
+  text-align: center;
+  font-size: .88rem;
+  font-weight: 500;
+  color: var(--text-mid);
+  transition: all .2s;
+  user-select: none;
+}
+.usage-option:hover { border-color: var(--navy-lt); color: var(--navy); }
+.usage-option.selected { border-color: var(--navy); background: var(--navy); color: #fff; }
+.usage-option input { display: none; }
+
+/* ── NASA-TLX ───────────────────────────────────────────────────────────── */
+.tlx-grid { display: grid; gap: 16px; }
+.tlx-item label {
+  display: block;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.tlx-item .tlx-desc {
+  font-size: .78rem;
+  color: var(--text-lt);
+  margin-bottom: 8px;
+}
+.tlx-item input[type=range] {
+  width: 100%;
+  accent-color: var(--navy-lt);
+  height: 6px;
+}
+.tlx-scale-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: .72rem;
+  color: var(--text-lt);
+  margin-top: 4px;
+}
+.tlx-val {
+  display: inline-block;
+  background: var(--navy);
+  color: #fff;
+  font-size: .75rem;
+  padding: 2px 8px;
+  border-radius: 99px;
+  margin-left: 8px;
+  font-family: 'Source Code Pro', monospace;
+  vertical-align: middle;
+}
+
+/* ── Demographic fields ─────────────────────────────────────────────────── */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-group label {
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--navy);
+  letter-spacing: .02em;
+}
+.form-group select,
+.form-group input[type=number],
+.form-group input[type=text],
+.form-group input[type=email] {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: .92rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color .2s;
+  background: #fff;
+}
+.form-group select:focus,
+.form-group input:focus { border-color: var(--navy-lt); }
+.form-group .hint { font-size: .75rem; color: var(--text-lt); }
+
+/* ── SUS ────────────────────────────────────────────────────────────────── */
+.sus-grid { display: grid; gap: 14px; }
+.sus-item { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; }
+.sus-item .sus-q { font-size: .9rem; color: var(--text); }
+.sus-item .sus-scale {
+  display: flex;
+  gap: 4px;
+}
+.sus-item .sus-scale label {
+  width: 32px; height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .78rem; font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.sus-item .sus-scale label:hover { border-color: var(--navy-lt); }
+.sus-item .sus-scale input { display: none; }
+.sus-item .sus-scale label:has(input:checked) {
+  background: var(--navy);
+  color: #fff;
+  border-color: var(--navy);
+}
+.sus-anchors { display: flex; justify-content: space-between; font-size: .7rem; color: var(--text-lt); margin-top: 2px; }
+
+/* ── TiA ────────────────────────────────────────────────────────────────── */
+.tia-grid { display: grid; gap: 14px; }
+
+/* ── Buttons ────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: .95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: .02em;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--navy);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--navy-mid); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(28,43,74,.25); }
+.btn-secondary {
+  background: var(--cream-dark);
+  color: var(--navy);
+  border: 1px solid var(--border);
+}
+.btn-secondary:hover { background: var(--border-lt); }
+.btn-gold {
+  background: var(--gold);
+  color: #fff;
+}
+.btn-gold:hover { background: var(--gold-lt); color: var(--navy); }
+.btn-group { display: flex; gap: 12px; margin-top: 28px; align-items: center; }
+.btn-group.right { justify-content: flex-end; }
+
+/* ── Timer ──────────────────────────────────────────────────────────────── */
+.timer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--navy);
+  color: #fff;
+  padding: 5px 12px;
+  border-radius: 99px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: .82rem;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 200;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transition: opacity .4s;
+}
+.timer-badge.visible { opacity: 1; }
+.timer-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold-lt); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.3; } }
+
+/* ── Consent checkboxes ─────────────────────────────────────────────────── */
+.consent-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 16px;
+  background: var(--cream);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+}
+.consent-item input[type=checkbox] {
+  width: 18px; height: 18px;
+  accent-color: var(--navy);
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.consent-item label { font-size: .9rem; color: var(--text-mid); line-height: 1.55; cursor: pointer; }
+
+/* ── Completion page ────────────────────────────────────────────────────── */
+.completion-seal {
+  width: 80px; height: 80px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-lt));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+  font-size: 2.2rem;
+  box-shadow: 0 4px 24px rgba(28,43,74,.3);
+}
+.data-preview {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: .75rem;
+  color: var(--text-mid);
+  max-height: 280px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* ── Info callout ───────────────────────────────────────────────────────── */
+.callout {
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  font-size: .88rem;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+.callout-info { background: #E8F0FB; border-left: 4px solid var(--navy-lt); color: var(--navy); }
+.callout-warn { background: #FFF8E1; border-left: 4px solid var(--gold); color: #5A3E00; }
+.callout-success { background: #E8F5EE; border-left: 4px solid var(--success); color: #1A4A2E; }
+
+/* ── Video embed stub ───────────────────────────────────────────────────── */
+.video-stub {
+  background: var(--navy);
+  border-radius: 8px;
+  aspect-ratio: 16/9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: rgba(255,255,255,.7);
+  font-size: .9rem;
+  margin: 16px 0;
+}
+.video-play {
+  width: 56px; height: 56px;
+  background: rgba(255,255,255,.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: background .2s;
+}
+.video-play:hover { background: rgba(255,255,255,.25); }
+
+/* ── Required marker ────────────────────────────────────────────────────── */
+.req { color: #B00; margin-left: 3px; }
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .container { padding: 20px 16px 60px; }
+  .card { padding: 24px 20px; }
+  .form-grid { grid-template-columns: 1fr; }
+  .sus-item { grid-template-columns: 1fr; }
+  .prompt-field { grid-template-columns: 1fr; }
+  .prompt-field-label { padding: 10px 14px; }
+  .site-header { padding: 0 16px; }
+  .progress-bar-wrap { max-width: 120px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Header ────────────────────────────────────────────────────────────── -->
+<header class="site-header">
+  <div class="logo">DRESMARA <span>/ Study Portal</span></div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressFill"></div>
+  </div>
+  <div class="progress-label" id="progressLabel">Consent</div>
+</header>
+
+<!-- ── Timer badge ───────────────────────────────────────────────────────── -->
+<div class="timer-badge" id="timerBadge">
+  <div class="timer-dot"></div>
+  <span id="timerDisplay">00:00</span>
+</div>
+
+<div class="container" id="mainContainer"></div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────────────────────────────────────
+const STATE = {
+  condition: null,          // 'S' = scaffolded, 'C' = unstructured
+  currentScreen: 0,
+  vignette: 0,              // 1–4
+  timerStart: null,
+  timerInterval: null,
+  timings: {},              // { V1: seconds, V2: seconds, … }
+  data: {
+    id: null,
+    condition: null,
+    // Demographics
+    age: null, gender: null, education: null,
+    rank: null, missions: null, ai_fam: null,
+    email: null,
+    // Per vignette: prompt, conv_url, rel, suf, tru, use, tlx, time
+    V1:{}, V2:{}, V3:{}, V4:{},
+    // SUS (10 items)
+    sus: Array(10).fill(null),
+    // TiA (7 items)
+    tia: Array(7).fill(null),
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CONTENT
+// ─────────────────────────────────────────────────────────────────────────────
+const VIGNETTES = {
+  1: {
+    title: "Vignette 1 — Report Drafting",
+    tag: "SALUTE Report",
+    frontier: "outside",
+    text: `<p>You are a junior officer serving as the Intelligence Officer (S2) for a battalion-level task force deployed in a peacekeeping operation in Verdania. Your battalion is responsible for maintaining security in a semi-urban sector that has recently experienced an increase in armed group activity.</p>
+    <p style="margin-top:10px">At 15:30 local time on 14 April 2025, a patrol from Charlie Company reported the following observation while conducting routine route clearance along Route AMBER:</p>
+    <div class="vignette-inner-quote">"We observed a group of approximately 12 to 15 individuals dressed in civilian clothing. They were moving in a south-easterly direction along Route AMBER, approximately 200 metres north of the bridge at Grid 4471. The group included at least one civilian pickup truck with a mounted weapon on the flatbed. Several individuals were carrying AK-pattern rifles. The observation was made at approximately 14:30 local time."</div>`,
+    task: `Using <strong>ChatGPT 4.5</strong>, draft a SALUTE report based on the patrol's observation above. Your report must cover all six elements: <strong>Size, Activity, Location, Unit, Time, Equipment</strong>. Paste or summarise your ChatGPT-assisted SALUTE report in the response box below.`,
+    responseLabel: "Your SALUTE Report (ChatGPT-assisted)",
+    responsePlaceholder: "S — Size:\nA — Activity:\nL — Location:\nU — Unit:\nT — Time:\nE — Equipment:",
+    responseRows: 9,
+  },
+  2: {
+    title: "Vignette 2 — Knowledge Summarisation",
+    tag: "Expert Intuition Analysis",
+    frontier: "inside",
+    text: `<p>You are a senior staff officer at a joint command headquarters. Your commanding officer, Brigadier General Andrei Marin, has made a recommendation in a planning meeting that has surprised several members of the planning staff.</p>
+    <div class="vignette-inner-quote">BG Marin stated: "I know this area. I have commanded at brigade level in this theatre and I have a strong feeling that the insurgent cell will attempt to move their cache through the northern corridor on Friday night. I cannot point to a specific intelligence report, but my gut tells me this is what they will do. I recommend we pre-position our quick reaction force accordingly."</div>
+    <p style="margin-top:10px">BG Marin has served for 22 years in the military and holds a Master's degree in Strategic Studies. However, he was last deployed to this specific operational area <strong>six years ago</strong>, and the insurgent network has undergone significant structural changes since that time. His previous deployments focused primarily on conventional force-on-force engagements rather than counter-insurgency and cache interdiction. He has not received systematic feedback on the outcomes of similar predictions in recent planning cycles.</p>`,
+    task: `Using <strong>ChatGPT 4.5</strong>, analyse whether BG Marin's intuition should be trusted in this situation. Apply the theoretical conditions required for <strong>expert intuition to be valid</strong>. Summarise your ChatGPT-assisted analysis below.`,
+    responseLabel: "Your Analysis (ChatGPT-assisted)",
+    responsePlaceholder: "Should BG Marin's intuition be trusted? Explain which conditions for valid expert intuition are met and which are not...",
+    responseRows: 7,
+  },
+  3: {
+    title: "Vignette 3 — Idea Generation",
+    tag: "Operational Problem Solving",
+    frontier: "inside",
+    text: `<p>You are the Executive Officer (XO) of a battalion task force in Verdania. Your commanding officer has asked you to prepare a brief idea generation memo identifying <strong>one practical, actionable solution</strong> for each of the five operational problems below. Each solution should be specific, feasible within battalion-level resources, and directly address the stated problem.</p>
+    <ul style="margin-top:12px">
+      <li><strong>P1 — Civilian cooperation:</strong> Local civilians in the northern sub-district have become uncooperative with patrols, refusing to provide information and expressing hostility. Recent house searches without adequate cultural sensitivity measures are believed to have contributed.</li>
+      <li><strong>P2 — Intelligence gap:</strong> The battalion's current intelligence picture does not include reliable information about insurgent movement patterns in the eastern part of the operational area, particularly around the industrial zone near Grid 5583.</li>
+      <li><strong>P3 — IED threat:</strong> Three battalion vehicles have been damaged by IEDs in the past two weeks, all on the same stretch of Route COBALT between Grids 3341 and 3357. The placement pattern suggests local knowledge of patrol scheduling.</li>
+      <li><strong>P4 — Logistics disruption:</strong> The primary supply route (Route DIAMOND) has been closed due to civil unrest. The forward operating base is operating on 72-hour reserve stocks.</li>
+      <li><strong>P5 — Key leader engagement:</strong> The battalion has been tasked to conduct a KLE with the paramount chief of Kalar district, who has not previously cooperated with coalition forces. The first meeting will be decisive.</li>
+    </ul>`,
+    task: `Using <strong>ChatGPT 4.5</strong>, generate one specific and actionable solution for each of the five problems above. Record your ChatGPT-assisted solutions below.`,
+    responseLabel: "Your Solutions (ChatGPT-assisted)",
+    responsePlaceholder: "P1 — Civilian cooperation:\n\nP2 — Intelligence gap:\n\nP3 — IED threat:\n\nP4 — Logistics disruption:\n\nP5 — Key leader engagement:",
+    responseRows: 12,
+  },
+  4: {
+    title: "Vignette 4 — Principle-Based Problem Solving",
+    tag: "Key Leader Engagement",
+    frontier: "outside",
+    text: `<p>You are a battalion commander conducting a key leader engagement with <strong>Sheikh Hassan Al-Rashid</strong>, the most senior tribal leader in Kalar district, Verdania. This is your first meeting. Your cultural advisor has briefed you that the Sheikh places great importance on protocol and that the first impression will be decisive.</p>
+    <p style="margin-top:10px">As you enter the meeting room, Sheikh Al-Rashid rises and greets you with the traditional greeting of his people: he places his right hand over his heart, bows his head slightly, and says: <em>"Assalamu Alaikum, Commander."</em></p>
+    <p style="margin-top:10px">Your interpreter is standing beside you. You have a full agenda and are aware that the Sheikh's time is limited to 45 minutes.</p>
+    <p style="margin-top:14px"><strong>Select one of the four response options:</strong></p>
+    <ul style="margin-top:8px">
+      <li><strong>A.</strong> Reciprocate the greeting: place your right hand over your heart, bow your head slightly, and respond: <em>"Wa Alaikum Assalam, Sheikh Hassan."</em> Then proceed with introductions.</li>
+      <li><strong>B.</strong> Extend your hand for a handshake and say: <em>"Thank you for meeting with me, Sheikh Hassan. We have a full agenda and I want to make the most of your time."</em></li>
+      <li><strong>C.</strong> Remain silent and allow your interpreter to respond to the greeting on your behalf while you prepare your opening remarks.</li>
+      <li><strong>D.</strong> Pause and quietly ask your cultural advisor how you should respond before addressing the Sheikh.</li>
+    </ul>`,
+    task: `Using <strong>ChatGPT 4.5</strong>, select the most appropriate immediate response to Sheikh Al-Rashid's greeting and provide a <strong>justification</strong> based on the principles of key leader engagement and cross-cultural respect. Record your selection and justification below.`,
+    responseLabel: "Your Selection and Justification (ChatGPT-assisted)",
+    responsePlaceholder: "Selected option: (A / B / C / D)\n\nJustification:",
+    responseRows: 6,
+  },
+};
+
+const TLX_DIMS = [
+  { id:"mental",    label:"Mental Demand",   desc:"How mentally demanding was this task?" },
+  { id:"physical",  label:"Physical Demand",  desc:"How physically demanding was this task?" },
+  { id:"temporal",  label:"Temporal Demand",  desc:"How hurried or rushed was the pace?" },
+  { id:"perform",   label:"Performance",      desc:"How successful were you in accomplishing the task?" },
+  { id:"effort",    label:"Effort",           desc:"How hard did you have to work to attain your level of performance?" },
+  { id:"frustration",label:"Frustration",    desc:"How insecure, discouraged, irritated or stressed were you?" },
+];
+
+const SUS_ITEMS = [
+  "I think that I would like to use this AI system frequently.",
+  "I found the AI system unnecessarily complex.",
+  "I thought the AI system was easy to use.",
+  "I think that I would need the support of a technical person to be able to use this AI system.",
+  "I found the various functions in this AI system were well integrated.",
+  "I thought there was too much inconsistency in this AI system.",
+  "I would imagine that most people would learn to use this AI system very quickly.",
+  "I found the AI system very cumbersome to use.",
+  "I felt very confident using the AI system.",
+  "I needed to learn a lot of things before I could get going with this AI system.",
+];
+
+const TIA_ITEMS = [
+  "The AI system is deceptive.",
+  "The AI system behaves in an underhanded manner.",
+  "I am suspicious of the AI system's intent, action, or outputs.",
+  "I am wary of the AI system.",
+  "The AI system's actions will have a harmful or injurious outcome.",
+  "I am confident in the AI system.",
+  "The AI system provides security in terms of its information.",
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SCREENS DEFINITION
+// ─────────────────────────────────────────────────────────────────────────────
+// Screen IDs: consent, condition, tutorial, v1_prompt, v1_measures, v2_prompt,
+//             v2_measures, v3_prompt, v3_measures, v4_prompt, v4_measures,
+//             sus, tia, demographics, complete
+const SCREENS = [
+  'consent','condition','tutorial',
+  'v1_prompt','v1_measures',
+  'v2_prompt','v2_measures',
+  'v3_prompt','v3_measures',
+  'v4_prompt','v4_measures',
+  'sus','tia','demographics','complete'
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TIMER
+// ─────────────────────────────────────────────────────────────────────────────
+function startTimer(vigKey) {
+  STATE.timerStart = Date.now();
+  STATE.timings[vigKey] = null;
+  document.getElementById('timerBadge').classList.add('visible');
+  clearInterval(STATE.timerInterval);
+  STATE.timerInterval = setInterval(() => {
+    const s = Math.floor((Date.now() - STATE.timerStart) / 1000);
+    const m = Math.floor(s/60).toString().padStart(2,'0');
+    const sec = (s%60).toString().padStart(2,'0');
+    document.getElementById('timerDisplay').textContent = `${m}:${sec}`;
+  }, 1000);
+}
+function stopTimer(vigKey) {
+  if (!STATE.timerStart) return 0;
+  clearInterval(STATE.timerInterval);
+  const elapsed = Math.round((Date.now() - STATE.timerStart) / 1000);
+  STATE.timings[vigKey] = elapsed;
+  STATE.timerStart = null;
+  document.getElementById('timerBadge').classList.remove('visible');
+  return elapsed;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PROGRESS
+// ─────────────────────────────────────────────────────────────────────────────
+const LABELS = {
+  consent:'Consent', condition:'Setup', tutorial:'Tutorial',
+  v1_prompt:'Vignette 1', v1_measures:'Vignette 1',
+  v2_prompt:'Vignette 2', v2_measures:'Vignette 2',
+  v3_prompt:'Vignette 3', v3_measures:'Vignette 3',
+  v4_prompt:'Vignette 4', v4_measures:'Vignette 4',
+  sus:'Usability', tia:'Trust Scale', demographics:'Profile', complete:'Complete'
+};
+function updateProgress(screenId) {
+  const idx = SCREENS.indexOf(screenId);
+  const pct = Math.round((idx / (SCREENS.length-1)) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = LABELS[screenId] || '';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RENDER ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+function render(screenId) {
+  updateProgress(screenId);
+  const c = document.getElementById('mainContainer');
+  c.innerHTML = '';
+  const builders = {
+    consent:      buildConsent,
+    condition:    buildCondition,
+    tutorial:     buildTutorial,
+    v1_prompt:    () => buildVigPrompt(1),
+    v1_measures:  () => buildVigMeasures(1),
+    v2_prompt:    () => buildVigPrompt(2),
+    v2_measures:  () => buildVigMeasures(2),
+    v3_prompt:    () => buildVigPrompt(3),
+    v3_measures:  () => buildVigMeasures(3),
+    v4_prompt:    () => buildVigPrompt(4),
+    v4_measures:  () => buildVigMeasures(4),
+    sus:          buildSUS,
+    tia:          buildTIA,
+    demographics: buildDemographics,
+    complete:     buildComplete,
+  };
+  if (builders[screenId]) builders[screenId]();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function goTo(screenId) {
+  STATE.currentScreen = SCREENS.indexOf(screenId);
+  render(screenId);
+}
+function next() {
+  const idx = STATE.currentScreen;
+  if (idx < SCREENS.length - 1) {
+    STATE.currentScreen++;
+    render(SCREENS[STATE.currentScreen]);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SCREEN BUILDERS
+// ─────────────────────────────────────────────────────────────────────────────
+
+function buildConsent() {
+  const c = document.getElementById('mainContainer');
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-subtitle">National Defense University "Carol I" · DRESMARA</div>
+    <div class="card-title">Participant Information and Informed Consent</div>
+    <div class="card-subtitle" style="margin-top:4px">AI-Assisted Decision-Making Study · 2025</div>
+    <hr>
+    <div class="callout callout-info">
+      <strong>Study title:</strong> Prompt Scaffolding as an Interface Design Strategy for Trust Calibration in AI-Assisted Decision-Making<br>
+      <strong>Principal investigator:</strong> Col. Prof. habil. eng. Cezar Vasilescu, DRESMARA<br>
+      <strong>Estimated completion time:</strong> 60–75 minutes
+    </div>
+    <p style="margin-bottom:14px; font-size:.93rem; line-height:1.7; color:var(--text-mid)">
+      You are invited to participate in a research study examining how different interfaces for accessing AI tools affect decision-making quality and trust in AI outputs. You will complete four short decision-making tasks using ChatGPT 4.5, followed by questionnaires about your experience. Your participation is voluntary and you may withdraw at any time without consequence. All data are anonymised and used solely for academic research purposes.
+    </p>
+    <div id="consentItems">
+      ${[
+        "I have read and understood the participant information sheet.",
+        "I understand that my participation is voluntary and I may withdraw at any time.",
+        "I consent to my anonymised responses being used for academic research and publication.",
+        "I understand that my ChatGPT conversation links will be submitted to the research team for analysis.",
+        "I confirm that I am a graduate of a DRESMARA postgraduate course.",
+      ].map((t,i) => `
+      <div class="consent-item">
+        <input type="checkbox" id="ci${i}" onchange="checkConsent()">
+        <label for="ci${i}">${t}</label>
+      </div>`).join('')}
+    </div>
+    <div class="btn-group right">
+      <button class="btn btn-primary" id="consentBtn" onclick="submitConsent()" disabled>
+        Proceed →
+      </button>
+    </div>
+  </div>`;
+}
+
+function checkConsent() {
+  const all = [0,1,2,3,4].every(i => document.getElementById('ci'+i).checked);
+  document.getElementById('consentBtn').disabled = !all;
+}
+
+function submitConsent() {
+  STATE.data.id = 'P' + Date.now().toString(36).toUpperCase();
+  goTo('condition');
+}
+
+function buildCondition() {
+  const c = document.getElementById('mainContainer');
+  c.innerHTML = `
+  <div class="card" style="text-align:center">
+    <div class="card-subtitle">Study setup</div>
+    <div class="card-title">You have been assigned to a study condition</div>
+    <p style="color:var(--text-lt);font-size:.9rem;margin:8px 0 28px">Your condition has been pre-assigned based on your participant ID. Please proceed — do not refresh this page.</p>
+    <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:28px">
+      <div onclick="setCondition('S')" id="condS" style="flex:1;min-width:200px;max-width:280px;border:2px solid var(--border-lt);border-radius:10px;padding:24px 20px;cursor:pointer;transition:all .2s;">
+        <div class="cond-badge scaffolded" style="margin-bottom:14px">Scaffolded</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:1.05rem;color:var(--navy);margin-bottom:8px">Structured Prompt Interface</div>
+        <div style="font-size:.82rem;color:var(--text-lt);line-height:1.6">You will use a structured template to guide your prompts to ChatGPT 4.5.</div>
+      </div>
+      <div onclick="setCondition('C')" id="condC" style="flex:1;min-width:200px;max-width:280px;border:2px solid var(--border-lt);border-radius:10px;padding:24px 20px;cursor:pointer;transition:all .2s;">
+        <div class="cond-badge unstructured" style="margin-bottom:14px">Unstructured</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:1.05rem;color:var(--navy);margin-bottom:8px">Free-Form Access</div>
+        <div style="font-size:.82rem;color:var(--text-lt);line-height:1.6">You will access ChatGPT 4.5 directly using your own prompts.</div>
+      </div>
+    </div>
+    <div class="callout callout-warn" id="condWarn" style="display:none">Please select your assigned condition to continue.</div>
+    <div class="btn-group right">
+      <button class="btn btn-primary" id="condBtn" onclick="confirmCondition()" disabled>Confirm and continue →</button>
+    </div>
+  </div>`;
+}
+
+function setCondition(c) {
+  STATE.condition = c;
+  STATE.data.condition = c === 'S' ? 'Scaffolded' : 'Unstructured';
+  ['S','C'].forEach(k => {
+    const el = document.getElementById('cond'+k);
+    if (k === c) {
+      el.style.borderColor = k==='S' ? 'var(--scaff-dk)' : 'var(--ctrl-dk)';
+      el.style.background  = k==='S' ? 'var(--scaff)' : 'var(--ctrl)';
+      el.style.boxShadow   = 'var(--shadow)';
+    } else {
+      el.style.borderColor = 'var(--border-lt)';
+      el.style.background  = '#fff';
+      el.style.boxShadow   = 'none';
+    }
+  });
+  document.getElementById('condBtn').disabled = false;
+}
+
+function confirmCondition() {
+  if (!STATE.condition) { document.getElementById('condWarn').style.display='block'; return; }
+  goTo('tutorial');
+}
+
+function buildTutorial() {
+  const isSc = STATE.condition === 'S';
+  const c = document.getElementById('mainContainer');
+  c.innerHTML = `
+  <div class="card">
+    <div class="card-subtitle">Before you begin</div>
+    <div class="card-title">Tutorial: How to Use This Survey</div>
+    <div class="cond-badge ${isSc ? 'scaffolded':'unstructured'}">${isSc ? 'Scaffolded condition' : 'Unstructured condition'}</div>
+    <div class="video-stub">
+      <div class="video-play">▶</div>
+      <div>Condition-specific tutorial video<br><span style="font-size:.75rem;opacity:.6">[Insert Kaltura / Vimeo embed URL here]</span></div>
+    </div>
+    <div class="callout callout-info" style="margin-top:16px">
+      <strong>What you will do:</strong> You will complete four military decision-making tasks, one at a time. For each task you will:
+      <ol style="margin-top:8px;padding-left:18px;line-height:2">
+        <li>Read the scenario carefully</li>
+        <li>${isSc ? 'Fill in the structured prompt template and submit it to ChatGPT 4.5' : 'Write your own prompt and submit it to ChatGPT 4.5'}</li>
+        <li>Record your ChatGPT-assisted answer in this survey</li>
+        <li>Paste your <strong>ChatGPT conversation link</strong> into the designated field</li>
+        <li>Rate the ChatGPT response and complete brief questionnaires</li>
+      </ol>
+    </div>
+    ${isSc ? `
+    <div class="callout callout-warn">
+      <strong>Structured prompt template:</strong> For each vignette, you will see four labelled fields — <em>Context, Task, Constraints,</em> and <em>Output Format</em>. Complete all four fields, combine them into a single prompt, and submit it to ChatGPT 4.5 at <a href="https://chat.openai.com" target="_blank">chat.openai.com</a>.
+    </div>` : `
+    <div class="callout callout-warn">
+      <strong>Free-form prompting:</strong> For each vignette, you will see a single text area. Write your own prompt and submit it to ChatGPT 4.5 at <a href="https://chat.openai.com" target="_blank">chat.openai.com</a>. There is no required structure.
+    </div>`}
+    <div class="callout callout-success">
+      <strong>Important:</strong> After each ChatGPT interaction, copy the <strong>conversation URL</strong> from your browser address bar (it begins with <code style="font-size:.8rem">https://chat.openai.com/c/</code>) and paste it into the designated field in this survey.
+    </div>
+    <div class="btn-group right">
+      <button class="btn btn-primary" onclick="goTo('v1_prompt')">Begin — Vignette 1 →</button>
+    </div>
+  </div>`;
+}
+
+function buildVigPrompt(vNum) {
+  const v = VIGNETTES[vNum];
+  const isSc = STATE.condition === 'S';
+  startTimer('V'+vNum);
+  const c = document.getElementById('mainContainer');
+  c.innerHTML = `
+  <div class="section-label">Vignette ${vNum} of 4</div>
+  <div class="section-meta">${v.tag} · ${v.frontier === 'outside' ? 'Higher complexity task' : 'Knowledge-based task'}</div>
+
+  <div class="card">
+    <div class="card-subtitle">Scenario</div>
+    <div class="card-title">${v.title}</div>
+    <div class="vignette-box">${v.text}</div>
+  </div>
+
+  <div class="card">
+    <div class="card-subtitle">Your task</div>
+    <div class="task-instruction">${v.task}</div>
+
+    ${isSc ? buildScaffoldedPrompt(vNum) : buildFreePrompt(vNum)}
+
+    <hr style="margin:24px 0">
+    <div style="margin-bottom:16px">
+      <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:.95rem">${v.responseLabel} <span class="req">*</span></div>
+      <textarea id="v${vNum}_response" rows="${v.responseRows}" style="width:100%;border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;font-family:'Source Sans 3',sans-serif;font-size:.92rem;line-height:1.65;resize:vertical;outline:none;" placeholder="${v.responsePlaceholder}" oninput="STATE.data['V${vNum}'].response=this.value"></textarea>
+    </div>
+
+    <div class="chatgpt-link-area">
+      <label>ChatGPT 4.5 Conversation URL — Vignette ${vNum} <span class="req">*</span></label>
+      <input type="url" id="v${vNum}_url" placeholder="https://chat.openai.com/c/…" oninput="STATE.data['V${vNum}'].conv_url=this.value">
+      <div class="hint-text">After your ChatGPT interaction, copy the URL from your browser address bar and paste it here.</div>
+    </div>
+
+    <div class="btn-group right">
+      <button class="btn btn-primary" onclick="submitVigPrompt(${vNum})">Save and rate this response →</button>
+    </div>
+  </div>`;
+}
+
+function buildScaffoldedPrompt(vNum) {
+  return `
+  <div class="cond-badge scaffolded">Structured prompt template — complete all fields</div>
+  <div class="prompt-template">
+    <div class="prompt-template-header">Prompt Template <span>— complete all four fields, then combine into a single prompt for ChatGPT 4.5</span></div>
+    <div class="prompt-field">
+      <div class="prompt-field-label">CONTEXT <div class="hint">Who are you? What is the situation?</div></div>
+      <textarea id="v${vNum}_ctx" rows="3" placeholder="Describe your role and the operational context…" oninput="STATE.data['V${vNum}'].ctx=this.value"></textarea>
+    </div>
+    <div class="prompt-field">
+      <div class="prompt-field-label">TASK <div class="hint">What do you need ChatGPT to do?</div></div>
+      <textarea id="v${vNum}_task" rows="2" placeholder="State the specific task you are asking ChatGPT to complete…" oninput="STATE.data['V${vNum}'].task_field=this.value"></textarea>
+    </div>
+    <div class="prompt-field">
+      <div class="prompt-field-label">CONSTRAINTS <div class="hint">Limits, format requirements, things to avoid</div></div>
+      <textarea id="v${vNum}_const" rows="2" placeholder="e.g., length, tone, classification level, format requirements…" oninput="STATE.data['V${vNum}'].constraints=this.value"></textarea>
+    </div>
+    <div class="prompt-field">
+      <div class="prompt-field-label">OUTPUT FORMAT <div class="hint">How should the answer be structured?</div></div>
+      <textarea id="v${vNum}_fmt" rows="2" placeholder="e.g., bullet list, SALUTE format, numbered steps, prose summary…" oninput="STATE.data['V${vNum}'].output_fmt=this.value"></textarea>
+    </div>
+  </div>
+  <div class="callout callout-info" style="font-size:.83rem">
+    Combine your four fields into a single prompt and submit it to <a href="https://chat.openai.com" target="_blank" style="color:var(--navy);font-weight:600">ChatGPT 4.5 ↗</a>. Then return here to record your response and paste the conversation URL.
+  </div>`;
+}
+
+function buildFreePrompt(vNum) {
+  return `
+  <div class="cond-badge unstructured">Write your own prompt — no required structure</div>
+  <div class="free-prompt" style="margin-bottom:16px">
+    <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:.9rem">Your prompt to ChatGPT 4.5 (record what you submitted):</div>
+    <textarea id="v${vNum}_free" rows="4" placeholder="Type or paste the prompt you submitted to ChatGPT 4.5…" oninput="STATE.data['V${vNum}'].free_prompt=this.value"></textarea>
+  </div>
+  <div class="callout callout-info" style="font-size:.83rem">
+    Submit your prompt to <a href="https://chat.openai.com" target="_blank" style="color:var(--navy);font-weight:600">ChatGPT 4.5 ↗</a>. Then return here to record your response and paste the conversation URL.
+  </div>`;
+}
+
+function submitVigPrompt(vNum) {
+  const resp = document.getElementById('v'+vNum+'_response').value.trim();
+  const url  = document.getElementById('v'+vNum+'_url').value.trim();
+  if (!resp) { alert('Please record your ChatGPT-assisted response before continuing.'); return; }
+  if (!url)  { alert('Please paste your ChatGPT conversation URL before continuing.'); return; }
+  stopTimer('V'+vNum);
+  STATE.data['V'+vNum].time_seconds = STATE.timings['V'+vNum];
+  goTo('v'+vNum+'_measures');
+}
+
+function buildVigMeasures(vNum) {
+  const v = VIGNETTES[vNum];
+  const c = document.getElementById('mainContainer');
+  c.innerHTML = `
+  <div class="section-label">Vignette ${vNum} — Rating</div>
+  <div class="section-meta">Rate the ChatGPT response, then complete the cognitive load scale</div>
+
+  <!-- Perception ratings -->
+  <div class="card">
+    <div class="card-subtitle">Perception ratings</div>
+    <div class="card-title">How would you rate the ChatGPT 4.5 response for this task?</div>
+    <p style="font-size:.88rem;color:var(--text-lt);margin-bottom:20px">Rate each dimension on a 1–5 scale. 1 = Not at all · 5 = Completely.</p>
+
+    ${['Relevance','Sufficiency','Trustworthiness'].map((label, li) => {
+      const hints = ['Not relevant — Highly relevant', 'Not sufficient — Fully sufficient', 'Not trustworthy — Fully trustworthy'];
+      const key   = ['rel','suf','tru'][li];
+      return `
+      <div class="likert-block">
+        <div class="likert-q">${label} <span class="req">*</span> <span class="sub">${hints[li]}</span></div>
+        <div class="likert-scale">
+          ${[1,2,3,4,5].map(n => `
+          <label>
+            <input type="radio" name="v${vNum}_${key}" value="${n}" onchange="STATE.data['V${vNum}']['${key}']=parseInt(this.value)">
+            <span class="likert-num">${n}</span>
+          </label>`).join('')}
+        </div>
+      </div>`;
+    }).join('')}
+
+    <hr>
+    <div style="font-weight:600;color:var(--navy);margin-bottom:10px;font-size:.95rem">
+      Did you use this response in your final answer? <span class="req">*</span>
+    </div>
+    <div class="usage-options">
+      ${['Yes, used directly','Partially used','Not used'].map((label,ui) => {
+        const vals = ['Yes','Partially','No'];
+        return `<div class="usage-option" id="use_${vNum}_${ui}" onclick="selectUsage(${vNum},${ui},'${vals[ui]}')">
+          <input type="radio" name="v${vNum}_use" value="${vals[ui]}">
+          ${label}
+        </div>`;
+      }).join('')}
+    </div>
+  </div>
+
+  <!-- NASA-TLX -->
+  <div class="card">
+    <div class="card-subtitle">Cognitive load assessment</div>
+    <div class="card-title">NASA Task Load Index (Raw TLX)</div>
+    <p style="font-size:.88rem;color:var(--text-lt);margin-bottom:20px">Rate each dimension for this vignette on a scale from 0 (Low) to 100 (High).</p>
+    <div class="tlx-grid">
+      ${TLX_DIMS.map(d => `
+      <div class="tlx-item">
+        <label>${d.label}: <span class="tlx-val" id="tlx_${vNum}_${d.id}_val">50</span></label>
+        <div class="tlx-desc">${d.desc}</div>
+        <input type="range" min="0" max="100" value="50"
+          oninput="document.getElementById('tlx_${vNum}_${d.id}_val').textContent=this.value;
+                   if(!STATE.data['V${vNum}'].tlx) STATE.data['V${vNum}'].tlx={};
+                   STATE.data['V${vNum}'].tlx['${d.id}']=parseInt(this.value)">
+        <div class="tlx-scale-labels"><span>0 — Low</span><span>100 — High</span></div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="btn-group right">
+    <button class="btn btn-secondary" onclick="goTo('v${vNum}_prompt')">← Back to vignette</button>
+    <button class="btn btn-primary" onclick="submitVigMeasures(${vNum})">
+      ${vNum < 4 ? 'Next vignette →' : 'Continue to usability scales →'}
+    </button>
+  </div>`;
+}
+
+function selectUsage(vNum, idx, val) {
+  [0,1,2].forEach(i => {
+    const el = document.getElementById('use_'+vNum+'_'+i);
+    if (el) el.classList.toggle('selected', i===idx);
+  });
+  STATE.data['V'+vNum].use = val;
+}
+
+function submitVigMeasures(vNum) {
+  const vd = STATE.data['V'+vNum];
+  if (!vd.rel || !vd.suf || !vd.tru) {
+    alert('Please complete all three perception rating scales.'); return;
+  }
+  if (!vd.use) { alert('Please indicate how you used the ChatGPT response.'); return; }
+  // Auto-compute TCI
+  const meanPerc = (vd.rel + vd.suf + vd.tru) / 3 / 5;
+  // Accuracy not known at this point — TCI will be computed offline; store perception mean
+  vd.perc_mean = parseFloat(meanPerc.toFixed(4));
+  if (vNum < 4) {
+    goTo('v'+(vNum+1)+'_prompt');
+  } else {
+    goTo('sus');
+  }
+}
+
+function buildSUS() {
+  const c = document.getElementById('mainContainer');
+  c.innerHTML = `
+  <div class="section-label">System Usability Scale</div>
+  <div class="section-meta">Rate your experience using ChatGPT 4.5 during this session overall</div>
+  <div class="card">
+    <div class="card-subtitle">SUS — Brooke (1996)</div>
+    <div class="card-title">How usable did you find ChatGPT 4.5?</div>
+    <p style="font-size:.88rem;color:var(--text-lt);margin-bottom:20px">For each statement, circle the number that best describes your reaction. 1 = Strongly disagree · 5 = Strongly agree.</p>
+    <div class="sus-grid">
+      ${SUS_ITEMS.map((q,i) => `
+      <div class="sus-item">
+        <div class="sus-q">${i+1}. ${q}</div>
+        <div>
+          <div class="sus-scale">
+            ${[1,2,3,4,5].map(n => `
+            <label>
+              <input type="radio" name="sus${i}" value="${n}" onchange="STATE.data.sus[${i}]=parseInt(this.value)">
+              ${n}
+            </label>`).join('')}
+          </div>
+          <div class="sus-anchors"><span>Disagree</span><span>Agree</span></div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div class="btn-group right" style="margin-top:24px">
+      <button class="btn btn-primary" onclick="submitSUS()">Continue →</button>
+    </div>
+  </div>`;
+}
+
+function submitSUS() {
+  if (STATE.data.sus.some(v => v===null)) {
+    alert('Please rate all 10 SUS items before continuing.'); return;
+  }
+  // Compute SUS score
+  const score = STATE.data.sus.reduce((acc, v, i) => {
+    return acc + (i%2===0 ? v-1 : 5-v);
+  }, 0) * 2.5;
+  STATE.data.sus_score = Math.round(score);
+  goTo('tia');
+}
+
+function buildTIA() {
+  const c = document.getElementById('mainContainer');
+  c.innerHTML = `
+  <div class="section-label">Trust in Automation Scale</div>
+  <div class="section-meta">Jian, Bisantz & Drury (2000)</div>
+  <div class="card">
+    <div class="card-subtitle">TiA — 7-point scale</div>
+    <div class="card-title">How do you feel about ChatGPT 4.5 as an automated system?</div>
+    <p style="font-size:.88rem;color:var(--text-lt);margin-bottom:20px">Rate each statement on a scale from 1 (Not at all) to 7 (Extremely).</p>
+    <div class="tia-grid">
+      ${TIA_ITEMS.map((q,i) => `
+      <div class="likert-block">
+        <div class="likert-q">${i+1}. ${q} <span class="req">*</span></div>
+        <div class="likert-scale">
+          ${[1,2,3,4,5,6,7].map(n => `
+          <label>
+            <input type="radio" name="tia${i}" value="${n}" onchange="STATE.data.tia[${i}]=parseInt(this.value)">
+            <span class="likert-num">${n}</span>
+          </label>`).join('')}
+        </div>
+        <div class="likert-anchors"><span>1 — Not at all</span><span>7 — Extremely</span></div>
+      </div>`).join('')}
+    </div>
+    <div class="btn-group right" style="margin-top:24px">
+      <button class="btn btn-primary" onclick="submitTIA()">Continue →</button>
+    </div>
+  </div>`;
+}
+
+function submitTIA() {
+  if (STATE.data.tia.some(v => v===null)) {
+    alert('Please rate all 7 items before continuing.'); return;
+  }
+  STATE.data.tia_mean = parseFloat((STATE.data.tia.reduce((a,b)=>a+b,0)/7).toFixed(2));
+  goTo('demographics');
+}
+
+function buildDemographics() {
+  const c = document.getElementById('mainContainer');
+  c.innerHTML = `
+  <div class="section-label">Participant Profile</div>
+  <div class="section-meta">Final section — your background information</div>
+  <div class="card">
+    <div class="card-subtitle">Demographics</div>
+    <div class="card-title">About You</div>
+    <p style="font-size:.88rem;color:var(--text-lt);margin-bottom:24px">All information is anonymised and used only for research purposes.</p>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="d_age">Age <span class="req">*</span></label>
+        <input type="number" id="d_age" min="20" max="70" placeholder="e.g., 38">
+      </div>
+      <div class="form-group">
+        <label for="d_gender">Gender <span class="req">*</span></label>
+        <select id="d_gender">
+          <option value="">— select —</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="d_edu">Highest education level <span class="req">*</span></label>
+        <select id="d_edu">
+          <option value="">— select —</option>
+          <option>Bachelor's degree</option>
+          <option>Master's degree</option>
+          <option>PhD / Doctorate</option>
+          <option>Post-doctoral qualification</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="d_rank">Rank / Grade <span class="req">*</span></label>
+        <input type="text" id="d_rank" placeholder="e.g., Lt. Col., Colonel, Brigadier General">
+      </div>
+      <div class="form-group">
+        <label for="d_missions">Number of operational deployments <span class="req">*</span></label>
+        <input type="number" id="d_missions" min="0" max="20" placeholder="e.g., 2">
+      </div>
+      <div class="form-group full">
+        <label for="d_ai">AI familiarity <span class="req">*</span></label>
+        <select id="d_ai">
+          <option value="">— select —</option>
+          <option value="1">1 — Never used AI tools</option>
+          <option value="2">2 — Used once or twice</option>
+          <option value="3">3 — Use occasionally</option>
+          <option value="4">4 — Use regularly</option>
+          <option value="5">5 — Use daily / proficiently</option>
+        </select>
+      </div>
+      <div class="form-group full">
+        <label for="d_email">Contact email (optional — for receiving a summary of findings)</label>
+        <input type="email" id="d_email" placeholder="your.email@domain.com">
+        <div class="hint">Optional. Your email will not be linked to your response data.</div>
+      </div>
+    </div>
+    <div class="btn-group right" style="margin-top:24px">
+      <button class="btn btn-gold" onclick="submitDemographics()">Submit and view confirmation →</button>
+    </div>
+  </div>`;
+}
+
+function submitDemographics() {
+  const age    = document.getElementById('d_age').value;
+  const gender = document.getElementById('d_gender').value;
+  const edu    = document.getElementById('d_edu').value;
+  const rank   = document.getElementById('d_rank').value.trim();
+  const miss   = document.getElementById('d_missions').value;
+  const ai     = document.getElementById('d_ai').value;
+  if (!age||!gender||!edu||!rank||!miss||!ai) {
+    alert('Please complete all required fields (marked with *).'); return;
+  }
+  STATE.data.age      = parseInt(age);
+  STATE.data.gender   = gender;
+  STATE.data.education= edu;
+  STATE.data.rank     = rank;
+  STATE.data.missions = parseInt(miss);
+  STATE.data.ai_fam   = parseInt(ai);
+  STATE.data.email    = document.getElementById('d_email').value.trim();
+  STATE.data.submitted_at = new Date().toISOString();
+  goTo('complete');
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EMAILJS CONFIGURATION
+// To activate automatic sending:
+//   1. Create a free account at https://www.emailjs.com
+//   2. Add a Gmail service connected to caesarvasilescu@gmail.com
+//   3. Create an email template (instructions in the SETUP GUIDE below)
+//   4. Replace the three placeholder strings below with your real IDs
+//
+// SETUP GUIDE — EmailJS template settings:
+//   To:      caesarvasilescu@gmail.com
+//   Subject: DRESMARA Study — Response {{participant_id}} ({{condition}})
+//   Body:    {{message}}
+//   Reply-to: {{reply_to}}
+// ─────────────────────────────────────────────────────────────────────────────
+const EMAILJS_CONFIG = {
+  publicKey:   '-ry9KNZheN-PeaP3v',
+  serviceId:   'service_uf4mqiu',
+  templateId:  'template_fsikfx5',
+  recipient:   'caesarvasilescu@gmail.com',
+  configured:  true,
+};
+
+// Initialise EmailJS (runs once on page load — safe even before IDs are set)
+(function() {
+  try { emailjs.init({ publicKey: EMAILJS_CONFIG.publicKey }); } catch(e) {}
+})();
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SEND RESPONSE DATA
+// Tries EmailJS first; falls back to mailto: if not configured or if it fails
+// ─────────────────────────────────────────────────────────────────────────────
+async function sendResponseData() {
+  const json        = JSON.stringify(STATE.data, null, 2);
+  const subject     = `DRESMARA Study — Response ${STATE.data.id} (${STATE.data.condition})`;
+  const replyTo     = STATE.data.email || EMAILJS_CONFIG.recipient;
+
+  // ── Status display ──────────────────────────────────────────────────────
+  const statusEl = document.getElementById('sendStatus');
+  function setStatus(type, html) {
+    statusEl.className = 'callout callout-' + type;
+    statusEl.style.display = 'block';
+    statusEl.innerHTML = html;
+  }
+
+  // ── Try EmailJS if configured ────────────────────────────────────────────
+  if (EMAILJS_CONFIG.configured) {
+    setStatus('info', '<strong>Sending…</strong> Transmitting your data to the research team.');
+    try {
+      await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+        participant_id: STATE.data.id,
+        condition:      STATE.data.condition,
+        sus_score:      STATE.data.sus_score,
+        tia_mean:       STATE.data.tia_mean,
+        reply_to:       replyTo,
+        recipient:      EMAILJS_CONFIG.recipient,
+        message:        json,
+      });
+      setStatus('success',
+        `<strong>✓ Data sent successfully</strong> to ${EMAILJS_CONFIG.recipient}.<br>
+         Participant ID: <code style="font-size:.85rem">${STATE.data.id}</code> — no further action required.`);
+      document.getElementById('fallbackSection').style.display = 'none';
+      return;
+    } catch(err) {
+      setStatus('warn',
+        `<strong>Automatic sending failed</strong> (${err.text || err.message || 'network error'}).<br>
+         Please use one of the manual options below to submit your data.`);
+    }
+  } else {
+    setStatus('warn',
+      `<strong>Sending failed.</strong> Please use one of the manual submission options below to send your data to the research team.`);
+  }
+
+  // ── Fallback: mailto ─────────────────────────────────────────────────────
+  document.getElementById('fallbackSection').style.display = 'block';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COMPLETION SCREEN
+// ─────────────────────────────────────────────────────────────────────────────
+function buildComplete() {
+  const json = JSON.stringify(STATE.data, null, 2);
+  const c    = document.getElementById('mainContainer');
+
+  c.innerHTML = `
+  <div class="card" style="text-align:center">
+    <div class="completion-seal">✓</div>
+    <div class="card-title" style="font-size:1.6rem;margin-bottom:8px">
+      Thank you for your participation
+    </div>
+    <div class="card-subtitle" style="margin-bottom:20px">
+      Participant ID:
+      <strong style="color:var(--navy);font-family:'Source Code Pro',monospace">
+        ${STATE.data.id}
+      </strong>
+    </div>
+
+    <!-- Auto-send status (populated by sendResponseData) -->
+    <div id="sendStatus" class="callout callout-info" style="text-align:left;display:none"></div>
+
+    <!-- Session summary -->
+    <div class="callout callout-info" style="text-align:left;margin-top:12px">
+      <strong>Session summary</strong><br>
+      Condition: <strong>${STATE.data.condition}</strong> &nbsp;·&nbsp;
+      SUS score: <strong>${STATE.data.sus_score} / 100</strong> &nbsp;·&nbsp;
+      TiA mean: <strong>${STATE.data.tia_mean} / 7</strong><br>
+      Time on tasks: ${[1,2,3,4].map(v=>`V${v}: ${STATE.timings['V'+v]||'—'}s`).join(' · ')}
+      ${STATE.data.email
+        ? `<br>A summary of findings will be sent to <strong>${STATE.data.email}</strong> after data collection closes.`
+        : ''}
+    </div>
+
+    <!-- Fallback manual submission options -->
+    <div id="fallbackSection" style="display:none;text-align:left;margin-top:16px">
+      <hr style="border-color:var(--border-lt);margin-bottom:20px">
+      <div style="font-weight:600;color:var(--navy);margin-bottom:12px;font-size:.95rem">
+        Manual submission options
+      </div>
+
+      <!-- Option 1: mailto -->
+      <div class="callout callout-warn" style="margin-bottom:12px">
+        <strong>Option 1 — Send via your email client (recommended):</strong><br>
+        Click the button below. Your email client will open with your data pre-filled.
+        Verify the recipient is <code>caesarvasilescu@gmail.com</code> and press Send.
+      </div>
+      <button class="btn btn-gold" style="margin-bottom:16px" onclick="sendViaMailto()">
+        Open email client with data →
+      </button>
+
+      <!-- Option 2: copy + manual email -->
+      <div class="callout callout-info" style="margin-bottom:12px">
+        <strong>Option 2 — Copy and paste manually:</strong><br>
+        Copy the JSON data below, create a new email to
+        <strong>caesarvasilescu@gmail.com</strong>,
+        paste the data into the body or attach the downloaded file, and press Send.
+      </div>
+      <div class="btn-group" style="justify-content:flex-start;margin-bottom:16px;flex-wrap:wrap">
+        <button class="btn btn-secondary" onclick="copyData()">Copy JSON to clipboard</button>
+        <button class="btn btn-secondary" onclick="downloadData()">Download JSON file</button>
+      </div>
+
+      <!-- Data preview -->
+      <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:.85rem">
+        Your response data (JSON):
+      </div>
+      <div class="data-preview" id="dataPreview">${json}</div>
+    </div>
+
+    <hr style="margin:28px 0;border-color:var(--border-lt)">
+    <p style="font-size:.8rem;color:var(--text-lt)">
+      DRESMARA · National Defense University "Carol I" · Bra&#351;ov, Romania<br>
+      Principal Investigator: Col. Prof. habil. eng. Cezar Vasilescu ·
+      <a href="mailto:caesarvasilescu@gmail.com" style="color:var(--navy-lt)">caesarvasilescu@gmail.com</a>
+    </p>
+  </div>`;
+
+  // Trigger send automatically as soon as completion screen renders
+  sendResponseData();
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DATA HELPERS
+// ─────────────────────────────────────────────────────────────────────────────
+function sendViaMailto() {
+  const json    = JSON.stringify(STATE.data, null, 2);
+  const subject = encodeURIComponent(
+    `DRESMARA Study — Response ${STATE.data.id} (${STATE.data.condition})`);
+  const body    = encodeURIComponent(
+    `Participant ID: ${STATE.data.id}\nCondition: ${STATE.data.condition}\n\n` +
+    `Please do not edit this message. Full response data:\n\n${json}`);
+  // mailto has a ~2000 character URL limit in some clients — we keep the
+  // body lean and instruct them to attach the downloaded JSON if needed
+  const shortBody = encodeURIComponent(
+    `Participant ID: ${STATE.data.id}\nCondition: ${STATE.data.condition}\n` +
+    `SUS: ${STATE.data.sus_score}  TiA: ${STATE.data.tia_mean}\n\n` +
+    `Please attach the downloaded JSON file (DRESMARA_${STATE.data.id}_${STATE.data.condition}.json) to this email.`);
+  window.location.href =
+    `mailto:caesarvasilescu@gmail.com?subject=${subject}&body=${shortBody}`;
+  // Also trigger download so they have the file to attach
+  setTimeout(downloadData, 800);
+}
+
+function copyData() {
+  const json = JSON.stringify(STATE.data, null, 2);
+  navigator.clipboard.writeText(json)
+    .then(() => alert('Data copied to clipboard. Paste it into an email to caesarvasilescu@gmail.com.'))
+    .catch(() => alert('Copy failed — please select all text in the data box and copy manually.'));
+}
+
+function downloadData() {
+  const blob = new Blob([JSON.stringify(STATE.data, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `DRESMARA_${STATE.data.id}_${STATE.data.condition}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────────────────────
+render('consent');
+</script>
+</body>
+</html>
