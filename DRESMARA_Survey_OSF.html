@@ -704,17 +704,17 @@ const VIGNETTES = {
     title: "Vignette 4 — Principle-Based Problem Solving",
     tag: "Key Leader Engagement",
     frontier: "outside",
-    text: `<p>You are a battalion commander conducting a key leader engagement with <strong>Sheikh Hassan Al-Rashid</strong>, the most senior tribal leader in Kalar district, Verdania. This is your first meeting. Your cultural advisor has briefed you that the Sheikh places great importance on protocol and that the first impression will be decisive.</p>
-    <p style="margin-top:10px">As you enter the meeting room, Sheikh Al-Rashid rises and greets you with the traditional greeting of his people: he places his right hand over his heart, bows his head slightly, and says: <em>"Assalamu Alaikum, Commander."</em></p>
-    <p style="margin-top:10px">Your interpreter is standing beside you. You have a full agenda and are aware that the Sheikh's time is limited to 45 minutes.</p>
+    text: `<p>You are a battalion commander conducting a key leader engagement with <strong>Rajendra Singh Chauhan</strong>, the most senior village elder and paramount chief of the Kalar district, Verdania. This is your first meeting. Your cultural advisor has briefed you that Rajendra-ji places great importance on protocol and that the first impression will be decisive.</p>
+    <p style="margin-top:10px">As you enter the meeting room, Rajendra Singh Chauhan rises and greets you with the traditional greeting of his people: he presses his palms together in front of his chest, bows his head slightly, and says: <em>"Namaste, Commander."</em></p>
+    <p style="margin-top:10px">Your interpreter is standing beside you. You have a full agenda and are aware that Rajendra-ji's time is limited to 45 minutes.</p>
     <p style="margin-top:14px"><strong>Select one of the four response options:</strong></p>
     <ul style="margin-top:8px">
-      <li><strong>A.</strong> Reciprocate the greeting: place your right hand over your heart, bow your head slightly, and respond: <em>"Wa Alaikum Assalam, Sheikh Hassan."</em> Then proceed with introductions.</li>
-      <li><strong>B.</strong> Extend your hand for a handshake and say: <em>"Thank you for meeting with me, Sheikh Hassan. We have a full agenda and I want to make the most of your time."</em></li>
+      <li><strong>A.</strong> Reciprocate the greeting: press your palms together in front of your chest, bow your head slightly, and respond: <em>"Namaste, Rajendra-ji."</em> Then proceed with introductions.</li>
+      <li><strong>B.</strong> Extend your hand for a handshake and say: <em>"Thank you for meeting with me, Rajendra-ji. We have a full agenda and I want to make the most of your time."</em></li>
       <li><strong>C.</strong> Remain silent and allow your interpreter to respond to the greeting on your behalf while you prepare your opening remarks.</li>
-      <li><strong>D.</strong> Pause and quietly ask your cultural advisor how you should respond before addressing the Sheikh.</li>
+      <li><strong>D.</strong> Pause and quietly ask your cultural advisor how you should respond before addressing Rajendra-ji.</li>
     </ul>`,
-    task: `Using <strong>ChatGPT 4.5</strong>, select the most appropriate immediate response to Sheikh Al-Rashid's greeting and provide a <strong>justification</strong> based on the principles of key leader engagement and cross-cultural respect. Record your selection and justification below.`,
+    task: `Using <strong>ChatGPT 4.5</strong>, select the most appropriate immediate response to Rajendra Singh Chauhan\u2019s greeting and provide a <strong>justification</strong> based on the principles of key leader engagement and cross-cultural respect. Record your selection and justification below.`,
     responseLabel: "Your Selection and Justification (ChatGPT-assisted)",
     responsePlaceholder: "Selected option: (A / B / C / D)\n\nJustification:",
     responseRows: 6,
@@ -760,7 +760,7 @@ const TIA_ITEMS = [
 //             v2_measures, v3_prompt, v3_measures, v4_prompt, v4_measures,
 //             sus, tia, demographics, complete
 const SCREENS = [
-  'consent','condition','tutorial',
+  'consent','tutorial',
   'v1_prompt','v1_measures',
   'v2_prompt','v2_measures',
   'v3_prompt','v3_measures',
@@ -797,7 +797,7 @@ function stopTimer(vigKey) {
 // PROGRESS
 // ─────────────────────────────────────────────────────────────────────────────
 const LABELS = {
-  consent:'Consent', condition:'Setup', tutorial:'Tutorial',
+  consent:'Consent', tutorial:'Tutorial',
   v1_prompt:'Vignette 1', v1_measures:'Vignette 1',
   v2_prompt:'Vignette 2', v2_measures:'Vignette 2',
   v3_prompt:'Vignette 3', v3_measures:'Vignette 3',
@@ -820,7 +820,6 @@ function render(screenId) {
   c.innerHTML = '';
   const builders = {
     consent:      buildConsent,
-    condition:    buildCondition,
     tutorial:     buildTutorial,
     v1_prompt:    () => buildVigPrompt(1),
     v1_measures:  () => buildVigMeasures(1),
@@ -871,6 +870,11 @@ function buildConsent() {
     <p style="margin-bottom:14px; font-size:.93rem; line-height:1.7; color:var(--text-mid)">
       You are invited to participate in a research study examining how different interfaces for accessing AI tools affect decision-making quality and trust in AI outputs. You will complete four short decision-making tasks using ChatGPT 4.5, followed by questionnaires about your experience. Your participation is voluntary and you may withdraw at any time without consequence. All data are anonymised and used solely for academic research purposes.
     </p>
+    <div class="callout callout-info" style="margin-bottom:20px">
+      <strong>Your assigned study condition:</strong>&nbsp;
+      <span class="cond-badge ${STATE.condition==='S'?'scaffolded':'unstructured'}" style="display:inline-flex;margin:0 4px;padding:3px 10px;font-size:.75rem">${STATE.data.condition}</span>
+      <br><span style="font-size:.8rem;color:var(--navy);margin-top:4px;display:block">This condition has been assigned by the research team based on your invitation link and cannot be changed.</span>
+    </div>
     <div id="consentItems">
       ${[
         "I have read and understood the participant information sheet.",
@@ -898,58 +902,16 @@ function checkConsent() {
 }
 
 function submitConsent() {
-  STATE.data.id = 'P' + Date.now().toString(36).toUpperCase();
-  goTo('condition');
-}
-
-function buildCondition() {
-  const c = document.getElementById('mainContainer');
-  c.innerHTML = `
-  <div class="card" style="text-align:center">
-    <div class="card-subtitle">Study setup</div>
-    <div class="card-title">You have been assigned to a study condition</div>
-    <p style="color:var(--text-lt);font-size:.9rem;margin:8px 0 28px">Your condition has been pre-assigned based on your participant ID. Please proceed — do not refresh this page.</p>
-    <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:28px">
-      <div onclick="setCondition('S')" id="condS" style="flex:1;min-width:200px;max-width:280px;border:2px solid var(--border-lt);border-radius:10px;padding:24px 20px;cursor:pointer;transition:all .2s;">
-        <div class="cond-badge scaffolded" style="margin-bottom:14px">Scaffolded</div>
-        <div style="font-family:'Libre Baskerville',serif;font-size:1.05rem;color:var(--navy);margin-bottom:8px">Structured Prompt Interface</div>
-        <div style="font-size:.82rem;color:var(--text-lt);line-height:1.6">You will use a structured template to guide your prompts to ChatGPT 4.5.</div>
-      </div>
-      <div onclick="setCondition('C')" id="condC" style="flex:1;min-width:200px;max-width:280px;border:2px solid var(--border-lt);border-radius:10px;padding:24px 20px;cursor:pointer;transition:all .2s;">
-        <div class="cond-badge unstructured" style="margin-bottom:14px">Unstructured</div>
-        <div style="font-family:'Libre Baskerville',serif;font-size:1.05rem;color:var(--navy);margin-bottom:8px">Free-Form Access</div>
-        <div style="font-size:.82rem;color:var(--text-lt);line-height:1.6">You will access ChatGPT 4.5 directly using your own prompts.</div>
-      </div>
-    </div>
-    <div class="callout callout-warn" id="condWarn" style="display:none">Please select your assigned condition to continue.</div>
-    <div class="btn-group right">
-      <button class="btn btn-primary" id="condBtn" onclick="confirmCondition()" disabled>Confirm and continue →</button>
-    </div>
-  </div>`;
-}
-
-function setCondition(c) {
-  STATE.condition = c;
-  STATE.data.condition = c === 'S' ? 'Scaffolded' : 'Unstructured';
-  ['S','C'].forEach(k => {
-    const el = document.getElementById('cond'+k);
-    if (k === c) {
-      el.style.borderColor = k==='S' ? 'var(--scaff-dk)' : 'var(--ctrl-dk)';
-      el.style.background  = k==='S' ? 'var(--scaff)' : 'var(--ctrl)';
-      el.style.boxShadow   = 'var(--shadow)';
-    } else {
-      el.style.borderColor = 'var(--border-lt)';
-      el.style.background  = '#fff';
-      el.style.boxShadow   = 'none';
-    }
-  });
-  document.getElementById('condBtn').disabled = false;
-}
-
-function confirmCondition() {
-  if (!STATE.condition) { document.getElementById('condWarn').style.display='block'; return; }
+  // Generate anonymous P_ID at the moment of consent — not pre-assigned.
+  // Format: P + timestamp base-36 + 4 random alphanumeric chars for uniqueness.
+  const rand4 = Math.random().toString(36).substring(2, 6).toUpperCase();
+  STATE.data.id = ('P' + Date.now().toString(36) + rand4).toUpperCase();
   goTo('tutorial');
 }
+
+function buildCondition() {} // removed — condition set automatically from URL
+function setCondition() {}
+function confirmCondition() {}
 
 function buildTutorial() {
   const isSc = STATE.condition === 'S';
@@ -1353,9 +1315,9 @@ function submitDemographics() {
 //   Reply-to: {{reply_to}}
 // ─────────────────────────────────────────────────────────────────────────────
 const EMAILJS_CONFIG = {
-  publicKey:   '-ry9KNZheN-PeaP3v',
-  serviceId:   'service_uf4mqiu',
-  templateId:  'template_fsikfx5',
+  publicKey:   '[REDACTED]',
+  serviceId:   '[REDACTED]',
+  templateId:  '[REDACTED]',
   recipient:   'caesarvasilescu@gmail.com',
   configured:  true,
 };
@@ -1537,9 +1499,55 @@ function downloadData() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// INIT
+// INIT — read condition from URL parameter
+//
+// Two links are distributed by the researcher:
+//   Scaffolded:   https://[host]/DRESMARA_Survey.html?condition=S
+//   Unstructured: https://[host]/DRESMARA_Survey.html?condition=C
+//
+// condition : S = Scaffolded, C = Unstructured (required)
+//
+// The anonymous participant ID (P_ID) is auto-generated at submission,
+// not pre-assigned. No personalised links or recruitment lists are needed.
+//
+// If the condition parameter is missing or invalid, a blocking error screen
+// is shown and the survey does not start.
 // ─────────────────────────────────────────────────────────────────────────────
-render('consent');
+(function initFromURL() {
+  const params    = new URLSearchParams(window.location.search);
+  const condParam = (params.get('condition') || '').toUpperCase().trim();
+  const validCond = condParam === 'S' || condParam === 'C';
+
+  if (!validCond) {
+    // Show blocking error — do not start survey
+    document.getElementById('mainContainer').innerHTML = `
+    <div class="card" style="text-align:center; margin-top:40px;">
+      <div style="font-size:2.5rem;margin-bottom:16px;">⚠️</div>
+      <div class="card-title" style="color:#B00020;margin-bottom:12px;">Invalid or Missing Survey Link</div>
+      <div class="callout callout-warn" style="text-align:left;margin-bottom:20px;">
+        <strong>This survey link is incomplete or has been modified.</strong><br><br>
+        To participate, please use the exact link provided in your invitation
+        email from the research team. The link encodes your pre-assigned study
+        condition and must not be modified.
+      </div>
+      <div class="callout callout-info" style="text-align:left;">
+        If you believe you have received this message in error, please contact
+        the principal investigator:<br>
+        <strong>Col. Prof. habil. eng. Cezar Vasilescu</strong><br>
+        <a href="mailto:caesarvasilescu@gmail.com" style="color:var(--navy-lt)">
+          caesarvasilescu@gmail.com
+        </a>
+      </div>
+    </div>`;
+    return;
+  }
+
+  // ── Condition valid — set in STATE; P_ID generated at consent submission ──
+  STATE.condition      = condParam;
+  STATE.data.condition = condParam === 'S' ? 'Scaffolded' : 'Unstructured';
+
+  render('consent');
+})();
 </script>
 </body>
 </html>
