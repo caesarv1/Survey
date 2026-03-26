@@ -666,7 +666,7 @@ const VIGNETTES = {
     text: `<p>You are a junior officer serving as the Intelligence Officer (S2) for a battalion-level task force deployed in a peacekeeping operation in Verdania. Your battalion is responsible for maintaining security in a semi-urban sector that has recently experienced an increase in armed group activity.</p>
     <p style="margin-top:10px">At 15:30 local time on 14 April 2025, a patrol from Charlie Company reported the following observation while conducting routine route clearance along Route AMBER:</p>
     <div class="vignette-inner-quote">"We observed a group of approximately 12 to 15 individuals dressed in civilian clothing. They were moving in a south-easterly direction along Route AMBER, approximately 200 metres north of the bridge at Grid 4471. The group included at least one civilian pickup truck with a mounted weapon on the flatbed. Several individuals were carrying AK-pattern rifles. The observation was made at approximately 14:30 local time."</div>`,
-    task: `Using <strong>ChatGPT 4.5</strong>, draft a SALUTE report based on the patrol's observation above. Your report must cover all six elements: <strong>Size, Activity, Location, Unit, Time, Equipment</strong>. Paste or summarise your ChatGPT-assisted SALUTE report in the response box below.`,
+    task: `Using <strong>ChatGPT 3.5</strong>, draft a SALUTE report based on the patrol's observation above. Your report must cover all six elements: <strong>Size, Activity, Location, Unit, Time, Equipment</strong>. Paste or summarise your ChatGPT-assisted SALUTE report in the response box below.`,
     responseLabel: "Your SALUTE Report (ChatGPT-assisted)",
     responsePlaceholder: "S — Size:\nA — Activity:\nL — Location:\nU — Unit:\nT — Time:\nE — Equipment:",
     responseRows: 9,
@@ -678,7 +678,7 @@ const VIGNETTES = {
     text: `<p>You are a senior staff officer at a joint command headquarters. Your commanding officer, Brigadier General Andrei Marin, has made a recommendation in a planning meeting that has surprised several members of the planning staff.</p>
     <div class="vignette-inner-quote">BG Marin stated: "I know this area. I have commanded at brigade level in this theatre and I have a strong feeling that the insurgent cell will attempt to move their cache through the northern corridor on Friday night. I cannot point to a specific intelligence report, but my gut tells me this is what they will do. I recommend we pre-position our quick reaction force accordingly."</div>
     <p style="margin-top:10px">BG Marin has served for 22 years in the military and holds a Master's degree in Strategic Studies. However, he was last deployed to this specific operational area <strong>six years ago</strong>, and the insurgent network has undergone significant structural changes since that time. His previous deployments focused primarily on conventional force-on-force engagements rather than counter-insurgency and cache interdiction. He has not received systematic feedback on the outcomes of similar predictions in recent planning cycles.</p>`,
-    task: `Using <strong>ChatGPT 4.5</strong>, analyse whether BG Marin's intuition should be trusted in this situation. Apply the theoretical conditions required for <strong>expert intuition to be valid</strong>. Summarise your ChatGPT-assisted analysis below.`,
+    task: `Using <strong>ChatGPT 3.5</strong>, analyse whether BG Marin's intuition should be trusted in this situation. Apply the theoretical conditions required for <strong>expert intuition to be valid</strong>. Summarise your ChatGPT-assisted analysis below.`,
     responseLabel: "Your Analysis (ChatGPT-assisted)",
     responsePlaceholder: "Should BG Marin's intuition be trusted? Explain which conditions for valid expert intuition are met and which are not...",
     responseRows: 7,
@@ -695,7 +695,7 @@ const VIGNETTES = {
       <li><strong>P4 — Logistics disruption:</strong> The primary supply route (Route DIAMOND) has been closed due to civil unrest. The forward operating base is operating on 72-hour reserve stocks.</li>
       <li><strong>P5 — Key leader engagement:</strong> The battalion has been tasked to conduct a KLE with the paramount chief of Kalar district, who has not previously cooperated with coalition forces. The first meeting will be decisive.</li>
     </ul>`,
-    task: `Using <strong>ChatGPT 4.5</strong>, generate one specific and actionable solution for each of the five problems above. Record your ChatGPT-assisted solutions below.`,
+    task: `Using <strong>ChatGPT 3.5</strong>, generate one specific and actionable solution for each of the five problems above. Record your ChatGPT-assisted solutions below.`,
     responseLabel: "Your Solutions (ChatGPT-assisted)",
     responsePlaceholder: "P1 — Civilian cooperation:\n\nP2 — Intelligence gap:\n\nP3 — IED threat:\n\nP4 — Logistics disruption:\n\nP5 — Key leader engagement:",
     responseRows: 12,
@@ -714,7 +714,7 @@ const VIGNETTES = {
       <li><strong>C.</strong> Remain silent and allow your interpreter to respond to the greeting on your behalf while you prepare your opening remarks.</li>
       <li><strong>D.</strong> Pause and quietly ask your cultural advisor how you should respond before addressing Rajendra-ji.</li>
     </ul>`,
-    task: `Using <strong>ChatGPT 4.5</strong>, select the most appropriate immediate response to Rajendra Singh Chauhan\u2019s greeting and provide a <strong>justification</strong> based on the principles of key leader engagement and cross-cultural respect. Record your selection and justification below.`,
+    task: `Using <strong>ChatGPT 3.5</strong>, select the most appropriate immediate response to Rajendra Singh Chauhan\u2019s greeting and provide a <strong>justification</strong> based on the principles of key leader engagement and cross-cultural respect. Record your selection and justification below.`,
     responseLabel: "Your Selection and Justification (ChatGPT-assisted)",
     responsePlaceholder: "Selected option: (A / B / C / D)\n\nJustification:",
     responseRows: 6,
@@ -868,7 +868,7 @@ function buildConsent() {
       <strong>Estimated completion time:</strong> 60–75 minutes
     </div>
     <p style="margin-bottom:14px; font-size:.93rem; line-height:1.7; color:var(--text-mid)">
-      You are invited to participate in a research study examining how different interfaces for accessing AI tools affect decision-making quality and trust in AI outputs. You will complete four short decision-making tasks using ChatGPT 4.5, followed by questionnaires about your experience. Your participation is voluntary and you may withdraw at any time without consequence. All data are anonymised and used solely for academic research purposes.
+      You are invited to participate in a research study examining how different interfaces for accessing AI tools affect decision-making quality and trust in AI outputs. You will complete four short decision-making tasks using ChatGPT 3.5, followed by questionnaires about your experience. Your participation is voluntary and you may withdraw at any time without consequence. All data are anonymised and used solely for academic research purposes.
     </p>
     <div class="callout callout-info" style="margin-bottom:20px">
       <strong>Your assigned study condition:</strong>&nbsp;
@@ -929,7 +929,7 @@ function buildTutorial() {
       <strong>What you will do:</strong> You will complete four military decision-making tasks, one at a time. For each task you will:
       <ol style="margin-top:8px;padding-left:18px;line-height:2">
         <li>Read the scenario carefully</li>
-        <li>${isSc ? 'Fill in the structured prompt template and submit it to ChatGPT 4.5' : 'Write your own prompt and submit it to ChatGPT 4.5'}</li>
+        <li>${isSc ? 'Fill in the structured prompt template and submit it to ChatGPT 3.5' : 'Write your own prompt and submit it to ChatGPT 3.5'}</li>
         <li>Record your ChatGPT-assisted answer in this survey</li>
         <li>Paste your <strong>ChatGPT conversation link</strong> into the designated field</li>
         <li>Rate the ChatGPT response and complete brief questionnaires</li>
@@ -937,10 +937,10 @@ function buildTutorial() {
     </div>
     ${isSc ? `
     <div class="callout callout-warn">
-      <strong>Structured prompt template:</strong> For each vignette, you will see four labelled fields — <em>Context, Task, Constraints,</em> and <em>Output Format</em>. Complete all four fields, combine them into a single prompt, and submit it to ChatGPT 4.5 at <a href="https://chat.openai.com" target="_blank">chat.openai.com</a>.
+      <strong>Structured prompt template:</strong> For each vignette, you will see four labelled fields — <em>Context, Task, Constraints,</em> and <em>Output Format</em>. Complete all four fields, combine them into a single prompt, and submit it to ChatGPT 3.5 at <a href="https://chat.openai.com" target="_blank">chat.openai.com</a>.
     </div>` : `
     <div class="callout callout-warn">
-      <strong>Free-form prompting:</strong> For each vignette, you will see a single text area. Write your own prompt and submit it to ChatGPT 4.5 at <a href="https://chat.openai.com" target="_blank">chat.openai.com</a>. There is no required structure.
+      <strong>Free-form prompting:</strong> For each vignette, you will see a single text area. Write your own prompt and submit it to ChatGPT 3.5 at <a href="https://chat.openai.com" target="_blank">chat.openai.com</a>. There is no required structure.
     </div>`}
     <div class="callout callout-success">
       <strong>Important:</strong> After each ChatGPT interaction, copy the <strong>conversation URL</strong> from your browser address bar (it begins with <code style="font-size:.8rem">https://chat.openai.com/c/</code>) and paste it into the designated field in this survey.
@@ -979,7 +979,7 @@ function buildVigPrompt(vNum) {
     </div>
 
     <div class="chatgpt-link-area">
-      <label>ChatGPT 4.5 Conversation URL — Vignette ${vNum} <span class="req">*</span></label>
+      <label>ChatGPT 3.5 Conversation URL — Vignette ${vNum} <span class="req">*</span></label>
       <input type="url" id="v${vNum}_url" placeholder="https://chat.openai.com/c/…" oninput="STATE.data['V${vNum}'].conv_url=this.value">
       <div class="hint-text">After your ChatGPT interaction, copy the URL from your browser address bar and paste it here.</div>
     </div>
@@ -994,7 +994,7 @@ function buildScaffoldedPrompt(vNum) {
   return `
   <div class="cond-badge scaffolded">Structured prompt template — complete all fields</div>
   <div class="prompt-template">
-    <div class="prompt-template-header">Prompt Template <span>— complete all four fields, then combine into a single prompt for ChatGPT 4.5</span></div>
+    <div class="prompt-template-header">Prompt Template <span>— complete all four fields, then combine into a single prompt for ChatGPT 3.5</span></div>
     <div class="prompt-field">
       <div class="prompt-field-label">CONTEXT <div class="hint">Who are you? What is the situation?</div></div>
       <textarea id="v${vNum}_ctx" rows="3" placeholder="Describe your role and the operational context…" oninput="STATE.data['V${vNum}'].ctx=this.value"></textarea>
@@ -1013,7 +1013,7 @@ function buildScaffoldedPrompt(vNum) {
     </div>
   </div>
   <div class="callout callout-info" style="font-size:.83rem">
-    Combine your four fields into a single prompt and submit it to <a href="https://chat.openai.com" target="_blank" style="color:var(--navy);font-weight:600">ChatGPT 4.5 ↗</a>. Then return here to record your response and paste the conversation URL.
+    Combine your four fields into a single prompt and submit it to <a href="https://chat.openai.com" target="_blank" style="color:var(--navy);font-weight:600">ChatGPT 3.5 ↗</a>. Then return here to record your response and paste the conversation URL.
   </div>`;
 }
 
@@ -1021,11 +1021,11 @@ function buildFreePrompt(vNum) {
   return `
   <div class="cond-badge unstructured">Write your own prompt — no required structure</div>
   <div class="free-prompt" style="margin-bottom:16px">
-    <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:.9rem">Your prompt to ChatGPT 4.5 (record what you submitted):</div>
-    <textarea id="v${vNum}_free" rows="4" placeholder="Type or paste the prompt you submitted to ChatGPT 4.5…" oninput="STATE.data['V${vNum}'].free_prompt=this.value"></textarea>
+    <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:.9rem">Your prompt to ChatGPT 3.5 (record what you submitted):</div>
+    <textarea id="v${vNum}_free" rows="4" placeholder="Type or paste the prompt you submitted to ChatGPT 3.5…" oninput="STATE.data['V${vNum}'].free_prompt=this.value"></textarea>
   </div>
   <div class="callout callout-info" style="font-size:.83rem">
-    Submit your prompt to <a href="https://chat.openai.com" target="_blank" style="color:var(--navy);font-weight:600">ChatGPT 4.5 ↗</a>. Then return here to record your response and paste the conversation URL.
+    Submit your prompt to <a href="https://chat.openai.com" target="_blank" style="color:var(--navy);font-weight:600">ChatGPT 3.5 ↗</a>. Then return here to record your response and paste the conversation URL.
   </div>`;
 }
 
@@ -1049,7 +1049,7 @@ function buildVigMeasures(vNum) {
   <!-- Perception ratings -->
   <div class="card">
     <div class="card-subtitle">Perception ratings</div>
-    <div class="card-title">How would you rate the ChatGPT 4.5 response for this task?</div>
+    <div class="card-title">How would you rate the ChatGPT 3.5 response for this task?</div>
     <p style="font-size:.88rem;color:var(--text-lt);margin-bottom:20px">Rate each dimension on a 1–5 scale. 1 = Not at all · 5 = Completely.</p>
 
     ${['Relevance','Sufficiency','Trustworthiness'].map((label, li) => {
@@ -1139,10 +1139,10 @@ function buildSUS() {
   const c = document.getElementById('mainContainer');
   c.innerHTML = `
   <div class="section-label">System Usability Scale</div>
-  <div class="section-meta">Rate your experience using ChatGPT 4.5 during this session overall</div>
+  <div class="section-meta">Rate your experience using ChatGPT 3.5 during this session overall</div>
   <div class="card">
     <div class="card-subtitle">SUS — Brooke (1996)</div>
-    <div class="card-title">How usable did you find ChatGPT 4.5?</div>
+    <div class="card-title">How usable did you find ChatGPT 3.5?</div>
     <p style="font-size:.88rem;color:var(--text-lt);margin-bottom:20px">For each statement, circle the number that best describes your reaction. 1 = Strongly disagree · 5 = Strongly agree.</p>
     <div class="sus-grid">
       ${SUS_ITEMS.map((q,i) => `
@@ -1185,7 +1185,7 @@ function buildTIA() {
   <div class="section-meta">Jian, Bisantz & Drury (2000)</div>
   <div class="card">
     <div class="card-subtitle">TiA — 7-point scale</div>
-    <div class="card-title">How do you feel about ChatGPT 4.5 as an automated system?</div>
+    <div class="card-title">How do you feel about ChatGPT 3.5 as an automated system?</div>
     <p style="font-size:.88rem;color:var(--text-lt);margin-bottom:20px">Rate each statement on a scale from 1 (Not at all) to 7 (Extremely).</p>
     <div class="tia-grid">
       ${TIA_ITEMS.map((q,i) => `
