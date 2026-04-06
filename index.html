@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DRESMARA — AI-Assisted Decision-Making Study</title>
 <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
-<!-- EmailJS SDK — sends participant data directly to caesarvasilescu@gmail.com -->
+<!-- EmailJS SDK — sends participant data directly to [Redacted email] -->
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 /* ── Design system ─────────────────────────────────────────────────────── */
@@ -1304,12 +1304,12 @@ function submitDemographics() {
 // EMAILJS CONFIGURATION
 // To activate automatic sending:
 //   1. Create a free account at https://www.emailjs.com
-//   2. Add a Gmail service connected to caesarvasilescu@gmail.com
+//   2. Add a Gmail service connected to [Redacted email]
 //   3. Create an email template (instructions in the SETUP GUIDE below)
 //   4. Replace the three placeholder strings below with your real IDs
 //
 // SETUP GUIDE — EmailJS template settings:
-//   To:      caesarvasilescu@gmail.com
+//   To:      [Redacted email]
 //   Subject: DRESMARA Study — Response {{participant_id}} ({{condition}})
 //   Body:    {{message}}
 //   Reply-to: {{reply_to}}
@@ -1318,7 +1318,7 @@ const EMAILJS_CONFIG = {
   publicKey:   '[REDACTED]',
   serviceId:   '[REDACTED]',
   templateId:  '[REDACTED]',
-  recipient:   'caesarvasilescu@gmail.com',
+  recipient:   '[Redacted email]',
   configured:  true,
 };
 
@@ -1422,7 +1422,7 @@ function buildComplete() {
       <div class="callout callout-warn" style="margin-bottom:12px">
         <strong>Option 1 — Send via your email client (recommended):</strong><br>
         Click the button below. Your email client will open with your data pre-filled.
-        Verify the recipient is <code>caesarvasilescu@gmail.com</code> and press Send.
+        Verify the recipient is <code>[Redacted email]</code> and press Send.
       </div>
       <button class="btn btn-gold" style="margin-bottom:16px" onclick="sendViaMailto()">
         Open email client with data →
@@ -1432,7 +1432,7 @@ function buildComplete() {
       <div class="callout callout-info" style="margin-bottom:12px">
         <strong>Option 2 — Copy and paste manually:</strong><br>
         Copy the JSON data below, create a new email to
-        <strong>caesarvasilescu@gmail.com</strong>,
+        <strong>[Redacted email]</strong>,
         paste the data into the body or attach the downloaded file, and press Send.
       </div>
       <div class="btn-group" style="justify-content:flex-start;margin-bottom:16px;flex-wrap:wrap">
@@ -1451,7 +1451,7 @@ function buildComplete() {
     <p style="font-size:.8rem;color:var(--text-lt)">
       DRESMARA · National Defense University "Carol I" · Bra&#351;ov, Romania<br>
       Principal Investigator: Col. Prof. habil. eng. Cezar Vasilescu ·
-      <a href="mailto:caesarvasilescu@gmail.com" style="color:var(--navy-lt)">caesarvasilescu@gmail.com</a>
+      <a href="mailto:[Redacted email]" style="color:var(--navy-lt)">[Redacted email]</a>
     </p>
   </div>`;
 
@@ -1476,7 +1476,7 @@ function sendViaMailto() {
     `SUS: ${STATE.data.sus_score}  TiA: ${STATE.data.tia_mean}\n\n` +
     `Please attach the downloaded JSON file (DRESMARA_${STATE.data.id}_${STATE.data.condition}.json) to this email.`);
   window.location.href =
-    `mailto:caesarvasilescu@gmail.com?subject=${subject}&body=${shortBody}`;
+    `mailto:[Redacted email]?subject=${subject}&body=${shortBody}`;
   // Also trigger download so they have the file to attach
   setTimeout(downloadData, 800);
 }
@@ -1484,7 +1484,7 @@ function sendViaMailto() {
 function copyData() {
   const json = JSON.stringify(STATE.data, null, 2);
   navigator.clipboard.writeText(json)
-    .then(() => alert('Data copied to clipboard. Paste it into an email to caesarvasilescu@gmail.com.'))
+    .then(() => alert('Data copied to clipboard. Paste it into an email to [Redacted email].'))
     .catch(() => alert('Copy failed — please select all text in the data box and copy manually.'));
 }
 
@@ -1534,8 +1534,8 @@ function downloadData() {
         If you believe you have received this message in error, please contact
         the principal investigator:<br>
         <strong>Col. Prof. habil. eng. Cezar Vasilescu</strong><br>
-        <a href="mailto:caesarvasilescu@gmail.com" style="color:var(--navy-lt)">
-          caesarvasilescu@gmail.com
+        <a href="mailto:[Redacted email]" style="color:var(--navy-lt)">
+          [Redacted email]
         </a>
       </div>
     </div>`;
